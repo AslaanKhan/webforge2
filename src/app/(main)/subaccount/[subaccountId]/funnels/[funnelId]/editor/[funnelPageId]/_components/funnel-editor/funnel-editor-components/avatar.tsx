@@ -1,5 +1,6 @@
+"use client";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { EditorElement, useEditor } from '@/providers/editor/editor-provider';
 import clsx from 'clsx';
 import { Trash } from 'lucide-react';
@@ -9,7 +10,7 @@ type Props = {
   element: EditorElement;
 };
 
-const ButtonComponent: React.FC<Props> = (props : Props) => {
+const AvatarComponent: React.FC<Props> = (props : Props) => {
   const { dispatch, state } = useEditor();
 
   const handleDeleteElement = () => {
@@ -32,10 +33,10 @@ const ButtonComponent: React.FC<Props> = (props : Props) => {
   const styles = props.element.styles
 
   return (
-    <div      
+    <div
       style={styles}
       className={clsx(
-        'p-[2px] m-[5px] relative text-[16px] transition-all',
+        'p-[2px] w-full m-[5px] relative text-[16px] transition-all',
         {
           '!border-blue-500':
             state.editor.selectedElement.id === props.element.id,
@@ -52,31 +53,30 @@ const ButtonComponent: React.FC<Props> = (props : Props) => {
             {state.editor.selectedElement.name}
           </Badge>
         )}
-      <Button
-        className='w-full'
-        contentEditable={!state.editor.liveMode}
-        variant={!Array.isArray(props.element.content) ? props.element.content.variant : 'default'}
-        style={styles}
-        onBlur={(e) => {
-          const buttonElement = e.target as HTMLButtonElement
-          dispatch({
-            type: 'UPDATE_ELEMENT',
-            payload: {
-              elementDetails: {
-                ...props.element,
-                content: {
-                  ...props.element.content,
-                  innerText: buttonElement.innerText,
-                  type: 'button',
-                },
-              },
-            },
-          })
-        }}
-      >
-        {!Array.isArray(props.element.content) &&
-          props.element.content.innerText}
-      </Button>
+
+        <Avatar>
+            <AvatarImage 
+                src={`${!Array.isArray(props.element.content) && props.element.content.src}`}  
+                alt={`Avatar`}
+                onBlur={(e) => { 
+                    dispatch({
+                      type: 'UPDATE_ELEMENT',
+                      payload: {
+                        elementDetails: {
+                          ...props.element,
+                          content: {
+                            type: 'avatar',
+                            ...props.element.content,
+                          },
+                        },
+                      },
+                    })
+                  }}
+                />
+            <AvatarFallback>W</AvatarFallback>
+        </Avatar>
+      
+      
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
           <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
@@ -91,4 +91,4 @@ const ButtonComponent: React.FC<Props> = (props : Props) => {
   );
 };
 
-export default ButtonComponent;
+export default AvatarComponent;

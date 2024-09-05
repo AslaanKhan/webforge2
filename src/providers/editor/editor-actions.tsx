@@ -17,11 +17,35 @@ export type EditorAction =
       }
     }
   | {
+      type: 'RESIZE_ELEMENT'
+      payload: {
+        elementId: string;
+        newStyles: {
+          width?: string;
+          height?: string;
+          [key: string]: any;
+        };
+      };
+    }
+  | {
       type: 'UPDATE_ELEMENT'
       payload: {
         elementDetails: EditorElement
       }
     }
+    | {
+    type: 'UPDATE_ELEMENT'
+    payload: {
+      elementDetails: EditorElement // This can now include coordinates
+    }
+  }
+  | {
+    type: 'SET_COORDINATES'
+    payload: {
+      elementId: string;
+      coordinates: { x: number; y: number };
+    }
+  }
   | {
       type: 'DELETE_ELEMENT'
       payload: {

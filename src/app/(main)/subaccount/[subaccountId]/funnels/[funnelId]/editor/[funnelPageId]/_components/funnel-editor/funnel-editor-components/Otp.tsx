@@ -1,5 +1,13 @@
-"use client";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Label } from "@/components/ui/label";
 import { EditorElement, useEditor } from "@/providers/editor/editor-provider";
 import clsx from "clsx";
 import { Trash } from "lucide-react";
@@ -7,11 +15,13 @@ import React from "react";
 
 type Props = {
   element: EditorElement;
+  field?: any;
   provided?: any;
 };
 
-const TextComponent = (props: Props) => {
+const OTPInputComponent: React.FC<Props> = (props: Props) => {
   const { dispatch, state } = useEditor();
+  const [value, setValue] = React.useState("");
 
   const handleDeleteElement = () => {
     dispatch({
@@ -19,7 +29,6 @@ const TextComponent = (props: Props) => {
       payload: { elementDetails: props.element },
     });
   };
-  const styles = props.element.styles;
 
   const handleOnClickBody = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -31,15 +40,15 @@ const TextComponent = (props: Props) => {
     });
   };
 
-  //WE ARE NOT ADDING DRAG DROP
+  const styles = props.element.styles;
+
   return (
     <div
       ref={props.provided?.innerRef}
       {...props.provided?.draggableProps}
       {...props.provided?.dragHandleProps}
-      draggable
-      style={styles}
-      className={clsx("p-[5px] m-[5px] relative text-[16px] transition-all", {
+      // style={styles}
+      className={clsx("p-[2px] m-[5px] relative text-[16px] transition-all", {
         "!border-blue-500":
           state.editor.selectedElement.id === props.element.id,
 
@@ -54,27 +63,62 @@ const TextComponent = (props: Props) => {
             {state.editor.selectedElement.name}
           </Badge>
         )}
-      <div
-        className=""
-        contentEditable={!state.editor.liveMode}
+      <Label
+        className={`${
+          !Array.isArray(props.element.content) &&
+          props.element.content.labelClass
+        }`}
+        htmlFor={`${
+          !Array.isArray(props.element.content) && props.element.content.id
+        }`}
+      >
+        {!Array.isArray(props.element.content) && props.element.content.label}
+      </Label>
+      <InputOTP
+        value={value}
+        onChange={(value) => setValue(value)}
+        maxLength={6}
+        {...props.field}
+        id={`${
+          !Array.isArray(props.element.content) && props.element.content.id
+        }`}
+        defaultValue={`${
+          !Array.isArray(props.element.content) &&
+          props.element.content.innerText
+        }`}
         onBlur={(e) => {
-          const spanElement = e.target as HTMLSpanElement;
           dispatch({
             type: "UPDATE_ELEMENT",
             payload: {
               elementDetails: {
                 ...props.element,
                 content: {
-                  innerText: spanElement.innerText,
+                  ...props.element.content,
+                  innerText: value,
+                  type: "otp",
                 },
               },
             },
           });
         }}
       >
-        {!Array.isArray(props.element.content) &&
-          props.element.content.innerText}
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+          <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
+        </InputOTPGroup>
+      </InputOTP>
+      <div className="text-center text-sm">
+        {value === "" ? (
+          <>Enter your one-time password.</>
+        ) : (
+          <>You entered: {value}</>
+        )}
       </div>
+
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
           <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
@@ -89,4 +133,4 @@ const TextComponent = (props: Props) => {
   );
 };
 
-export default TextComponent;
+export default OTPInputComponent;

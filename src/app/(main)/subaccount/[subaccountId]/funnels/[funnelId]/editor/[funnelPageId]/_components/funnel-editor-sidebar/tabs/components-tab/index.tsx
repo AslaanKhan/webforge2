@@ -15,6 +15,11 @@ import ContactFormComponentPlaceholder from './contact-form-placeholder'
 import CheckoutPlaceholder from './checkout-placeholder'
 import InputPlaceholder from './input-placeholder'
 import ButtonPlaceholder from './button-placeholder'
+import AvatarPlaceholder from './avatar-placeholder'
+import DatePickerPlaceholder from './date-picker-placeholder'
+import CheckBoxPlaceholder from './checkbox-placeholder'
+import FormContainerPlaceholder from './form-container-placeholder'
+import OTPPlaceholder from './Otp-placeholder'
 
 type Props = {}
 
@@ -38,9 +43,39 @@ const ComponentsTab = (props: Props) => {
       group: 'elements',
     },
     {
+      Component: <AvatarPlaceholder />,
+      label: 'Avatar',
+      id: 'avatar',
+      group: 'elements',
+    },
+    {
+      Component: <CheckBoxPlaceholder />,
+      label: 'CheckBox',
+      id: 'checkbox',
+      group: 'elements',
+    },
+    {
+      Component: <DatePickerPlaceholder />,
+      label: 'Date',
+      id: 'date',
+      group: 'elements',
+    },
+    {
+      Component: <OTPPlaceholder />,
+      label: 'OTP',
+      id: 'otp',
+      group: 'elements',
+    },
+    {
       Component: <ContainerPlaceholder />,
       label: 'Container',
       id: 'container',
+      group: 'layout',
+    },
+    {
+      Component: <FormContainerPlaceholder />,
+      label: 'Form',
+      id: 'formContainer',
       group: 'layout',
     },
     {
@@ -67,12 +102,12 @@ const ComponentsTab = (props: Props) => {
       id: 'button',
       group: 'elements',
     },
-    {
-      Component: <CheckoutPlaceholder />,
-      label: 'Checkout',
-      id: 'paymentForm',
-      group: 'elements',
-    },
+    // {
+    //   Component: <CheckoutPlaceholder />,
+    //   label: 'Checkout',
+    //   id: 'paymentForm',
+    //   group: 'elements',
+    // },
     {
       Component: <LinkPlaceholder />,
       label: 'Link',

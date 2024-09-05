@@ -21,7 +21,7 @@ export const ourFileRouter = {
   //   .onUploadComplete(async ({ metadata, file }) => {
   //     return { uploadedBy: metadata.userId };
   //   }),
-  subaccountLogo: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
+  subaccountLogo: f({ image: { maxFileSize: '4MB', maxFileCount: 1 }, pdf: { maxFileSize: '4MB', maxFileCount: 1 } })
     .middleware(authenticateUser)
     .onUploadComplete(() => { }),
   avatar: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
@@ -30,7 +30,7 @@ export const ourFileRouter = {
   agencyLogo: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
     .middleware(authenticateUser)
     .onUploadComplete(() => { }),
-  media: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
+  media: f({ image: { maxFileSize: '4MB', maxFileCount: 1 }, pdf: { maxFileSize: '4MB', maxFileCount: 1 } })
     .middleware(authenticateUser)
     .onUploadComplete(() => { }),
 

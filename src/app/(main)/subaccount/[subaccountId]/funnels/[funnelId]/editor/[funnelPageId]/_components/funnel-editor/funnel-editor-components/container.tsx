@@ -18,7 +18,6 @@ const Container = ({ element }: Props) => {
   const handleOnDrop = (e: React.DragEvent, type: string) => {
     e.stopPropagation();
     const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
-    console.log(componentType);
     switch (componentType) {
       case "text":
         dispatch({
@@ -74,6 +73,78 @@ const Container = ({ element }: Props) => {
           },
         });
         break;
+      case "avatar":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: {  },
+              id: v4(),
+              name: "avatar",
+              styles: {
+                color: "",
+                ...defaultStyles,
+              },
+              type: "avatar",
+            },
+          },
+        });
+        break;
+      case "checkbox":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: {  },
+              id: v4(),
+              name: "checkbox",
+              styles: {
+                color: "",
+                ...defaultStyles,
+              },
+              type: "checkbox",
+            },
+          },
+        });
+        break;
+      case "date":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: { innerText: new Date().toLocaleDateString() },
+              id: v4(),
+              name: "date",
+              styles: {
+                color: "",
+                ...defaultStyles,
+              },
+              type: "date",
+            },
+          },
+        });
+        break;
+      case "otp":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: { },
+              id: v4(),
+              name: "otp",
+              styles: {
+                color: "",
+                ...defaultStyles,
+              },
+              type: "otp",
+            },
+          },
+        });
+        break;
       case "link":
         dispatch({
           type: "ADD_ELEMENT",
@@ -123,6 +194,21 @@ const Container = ({ element }: Props) => {
               name: "Container",
               styles: { ...defaultStyles },
               type: "container",
+            },
+          },
+        });
+        break;
+      case "formContainer":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: [],
+              id: v4(),
+              name: "formContainer",
+              styles: { ...defaultStyles },
+              type: "formContainer",
             },
           },
         });
@@ -262,9 +348,9 @@ const Container = ({ element }: Props) => {
             })}
             onDrop={(e) => handleOnDrop(e, id)}
             onDragOver={handleDragOver}
-            draggable={type !== "__body"}
+            draggable={type !== "__body" && !state.editor.liveMode}
             onClick={handleOnClickBody}
-            onDragStart={(e) => handleDragStart(e, "container")}
+            onDragStart={(e) => state.editor.liveMode ? e.preventDefault() : handleDragStart(e, "container")}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
@@ -284,13 +370,14 @@ const Container = ({ element }: Props) => {
             {Array.isArray(content) &&
               content.map((childElement, index) => (
                 <Draggable
+                  isDragDisabled={state.editor.liveMode}
                   key={childElement.id}
                   draggableId={childElement.id}
                   index={index}
                 >
                   {(provided) => (
                     <div
-                      className="w-full"
+                      className={`${childElement.styles.width ? `w-${childElement.styles.width}` : childElement.type === "container" ? "w-full" : 'w-fit'}`}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}

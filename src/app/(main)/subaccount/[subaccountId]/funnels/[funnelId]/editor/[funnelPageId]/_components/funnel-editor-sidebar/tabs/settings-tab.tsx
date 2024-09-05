@@ -31,6 +31,7 @@ import {
   AlignRight,
   AlignVerticalJustifyCenter,
   AlignVerticalJustifyStart,
+  BadgeX,
   ChevronsLeftRightIcon,
   LucideImageDown
 } from "lucide-react";
@@ -103,7 +104,7 @@ const SettingsTab = (props: Props) => {
                 />
               </div>
             )}
-          {state.editor.selectedElement.type === "video" &&
+          {["video", "avatar"].includes(state.editor.selectedElement.type!)   &&
             !Array.isArray(state.editor.selectedElement.content) && (
               <div className="flex flex-col gap-2">
                 <p className="text-muted-foreground">Link Path</p>
@@ -135,6 +136,38 @@ const SettingsTab = (props: Props) => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+              </div>
+            )}
+          {["input", "checkbox"].includes(state.editor.selectedElement.type!) &&
+            !Array.isArray(state.editor.selectedElement.content) && (
+              <div>
+              <div className="flex flex-col gap-2 mb-2">
+                <p className="text-muted-foreground">Label</p>
+                <Input
+                  id="label"
+                  placeholder="Label"
+                  onChange={handleChangeCustomValues}
+                  value={state.editor.selectedElement.content.label}
+                />
+              </div>
+              <div className="flex flex-col gap-2 mb-2">
+                <p className="text-muted-foreground">Label Color</p>
+                <Input
+                  id="labelClass"
+                  placeholder="label Class"
+                  onChange={handleChangeCustomValues}
+                  value={state.editor.selectedElement.content.labelClass}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="text-muted-foreground">Id</p>
+                <Input
+                  id="id"
+                  placeholder="id"
+                  onChange={handleChangeCustomValues}
+                  value={state.editor.selectedElement.content.id}
+                />
+              </div>
               </div>
             )}
         </AccordionContent>
@@ -517,7 +550,7 @@ const SettingsTab = (props: Props) => {
       </AccordionItem>
       <AccordionItem value="Flexbox" className="px-6 py-0  ">
         <AccordionTrigger className="!no-underline">Flexbox</AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="">
           <Label className="text-muted-foreground">Justify Content</Label>
           <Tabs
             onValueChange={(e) =>
@@ -531,6 +564,12 @@ const SettingsTab = (props: Props) => {
             value={state.editor.selectedElement.styles.justifyContent}
           >
             <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
+              <TabsTrigger
+                value=""
+                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+              >
+                <BadgeX size={18} />
+              </TabsTrigger>
               <TabsTrigger
                 value="space-between"
                 className="w-10 h-10 p-0 data-[state=active]:bg-muted"
@@ -577,6 +616,12 @@ const SettingsTab = (props: Props) => {
           >
             <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
               <TabsTrigger
+                value=""
+                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+              >
+                <BadgeX size={18} />
+              </TabsTrigger>
+              <TabsTrigger
                 value="center"
                 className="w-10 h-10 p-0 data-[state=active]:bg-muted"
               >
@@ -590,7 +635,7 @@ const SettingsTab = (props: Props) => {
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-2">
             <Input
               className="h-4 w-4"
               placeholder="px"
@@ -607,13 +652,30 @@ const SettingsTab = (props: Props) => {
             />
             <Label className="text-muted-foreground">Flex</Label>
           </div>
-          <div>
+          <div className="flex items-center gap-2 mt-2">
+            <Input
+              className="h-4 w-4"
+              placeholder="px"
+              type="checkbox"
+              id="flex-wrap"
+              onChange={(va) => {
+                handleOnChanges({
+                  target: {
+                    id: "flex-wrap",
+                    value: va.target.checked ? "wrap" : "nowrap",
+                  },
+                });
+              }}
+            />
+            <Label className="text-muted-foreground">Wrap</Label>
+          </div>
+          <div className="mt-2">
             <Label className="text-muted-foreground"> Direction</Label>
             <Input
               placeholder="px"
               id="flexDirection"
               onChange={handleOnChanges}
-              value={state.editor.selectedElement.styles.flexDirection}
+              value={state.editor.selectedElement.styles.flex}
             />
           </div>
         </AccordionContent>

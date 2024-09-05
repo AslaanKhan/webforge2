@@ -43,7 +43,6 @@ const LinkComponent = (props: Props) => {
   return (
     <div
       style={styles}
-      draggable
       onDragStart={(e) => handleDragStart(e, 'text')}
       onClick={handleOnClickBody}
       className={clsx(
