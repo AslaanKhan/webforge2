@@ -13,6 +13,7 @@ import DatePickerComponent from './date-picker'
 import CheckBoxComponent from './checkbox'
 import FormContainer from './form-container'
 import OTPInputComponent from './Otp'
+import PdfComponent from './pdf-container'
 
 type Props = {
   element: EditorElement
@@ -34,6 +35,8 @@ const Recursive = ({ element }: Props) => {
       return <CheckBoxComponent element={element} />
     case 'button':
       return <ButtonComponent element={element} />
+    case 'pdf':
+      return <PdfComponent element={element} />
     case 'formContainer':
         return <FormContainer element={element} />;
     case 'container':

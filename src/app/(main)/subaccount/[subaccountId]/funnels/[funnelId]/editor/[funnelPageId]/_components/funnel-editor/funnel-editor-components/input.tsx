@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { EditorElement, useEditor } from '@/providers/editor/editor-provider';
 import clsx from 'clsx';
 import { Trash } from 'lucide-react';
-import React, { useState } from 'react';
+import React from 'react';
 
 type Props = {
   element: EditorElement;
@@ -14,8 +14,6 @@ type Props = {
 
 const InputComponent: React.FC<Props> = (props : Props) => {
   const { dispatch, state } = useEditor();
-  const [isDragging, setIsDragging] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const handleDeleteElement = () => {
     dispatch({
@@ -34,60 +32,11 @@ const InputComponent: React.FC<Props> = (props : Props) => {
     })
   }
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsDragging(true);
-    setOffset({
-      x: e.clientX - (props.element.coordinates?.x || 0),
-      y: e.clientY - (props.element.coordinates?.y || 0),
-    });
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging) {
-      const newCoordinates = {
-        x: e.clientX - offset.x,
-        y: e.clientY - offset.y,
-      };
-
-      // Dispatch the updated coordinates
-      dispatch({
-        type: 'SET_COORDINATES',
-        payload: {
-          elementId: props.element.id,
-          coordinates: newCoordinates,
-        },
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-
-  React.useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging]);
-
-  const styles = props.element.styles;
-
+  const styles = props.element.styles
 
   return (
     <div
-      style={{
-        ...styles,  
-        position: 'absolute', // Ensure absolute positioning
-        left: props.element.coordinates?.x,
-        top: props.element.coordinates?.y,}}
+      style={styles}
       className={clsx(
         'p-[2px] w-full m-[5px] relative text-[16px] transition-all',
         {
@@ -98,7 +47,6 @@ const InputComponent: React.FC<Props> = (props : Props) => {
           'border-dashed border-[1px] border-slate-300': !state.editor.liveMode,
         }
       )}
-      onMouseDown={handleMouseDown}
       onClick={handleOnClickBody}
     >
       {state.editor.selectedElement.id === props.element.id &&

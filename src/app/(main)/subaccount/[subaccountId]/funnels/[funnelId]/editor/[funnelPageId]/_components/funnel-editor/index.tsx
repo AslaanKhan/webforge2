@@ -52,10 +52,11 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        'use-automation-zoom-in h-full overflow-scroll mr-[450px] bg-background transition-all rounded-md',
+        'use-automation-zoom-in h-full mr-[450px] bg-background transition-all rounded-md',
         {
           '!p-0 !mr-0':
             state.editor.previewMode === true || state.editor.liveMode === true,
+          'overflow-scroll': state.editor.previewMode === true || !state.editor.liveMode === true,
           '!w-[850px]': state.editor.device === 'Tablet',
           '!w-[420px]': state.editor.device === 'Mobile',
           'w-full': state.editor.device === 'Desktop',

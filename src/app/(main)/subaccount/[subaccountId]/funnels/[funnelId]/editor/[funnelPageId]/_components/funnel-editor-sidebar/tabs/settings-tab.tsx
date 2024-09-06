@@ -64,16 +64,33 @@ const SettingsTab = (props: Props) => {
 
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
+    console.log(settingProperty)
     let value = e.target.value;
     const styleObject = {
       [settingProperty]: value,
     };
 
+    settingProperty === "type" && (
+      dispatch({
+        type: "UPDATE_ELEMENT",
+        payload: {
+          elementDetails: {
+            ...state.editor.selectedElement,
+            type: value,           
+            content: {
+              ...state.editor.selectedElement.content,
+              ...styleObject,
+            },
+          },
+        },
+      })
+    )
+
     dispatch({
       type: "UPDATE_ELEMENT",
       payload: {
         elementDetails: {
-          ...state.editor.selectedElement,
+          ...state.editor.selectedElement,           
           content: {
             ...state.editor.selectedElement.content,
             ...styleObject,
@@ -104,7 +121,7 @@ const SettingsTab = (props: Props) => {
                 />
               </div>
             )}
-          {["video", "avatar"].includes(state.editor.selectedElement.type!)   &&
+          {["video", "avatar", "pdf"].includes(state.editor.selectedElement.type!)   &&
             !Array.isArray(state.editor.selectedElement.content) && (
               <div className="flex flex-col gap-2">
                 <p className="text-muted-foreground">Link Path</p>
@@ -113,7 +130,7 @@ const SettingsTab = (props: Props) => {
                   placeholder="https:domain.example.com/pathname"
                   onChange={handleChangeCustomValues}
                   value={state.editor.selectedElement.content.src}
-                />
+                />                
               </div>
             )}
           {state.editor.selectedElement.type === "button" &&

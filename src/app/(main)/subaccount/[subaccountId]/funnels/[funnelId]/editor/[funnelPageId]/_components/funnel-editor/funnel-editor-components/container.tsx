@@ -144,6 +144,23 @@ const Container = ({ element }: Props) => {
             },
           },
         });
+      case "pdf":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: { },
+              id: v4(),
+              name: "pdf",
+              styles: {
+                color: "",
+                ...defaultStyles,
+              },
+              type: "pdf",
+            },
+          },
+        });
         break;
       case "link":
         dispatch({
@@ -325,7 +342,10 @@ const Container = ({ element }: Props) => {
       <Droppable droppableId={id} type="child">
         {(provided) => (
           <div
-            style={styles}
+            style={{
+              marginBottom: "100px",
+              ...styles
+            }}
             className={clsx("relative p-4 transition-all group", {
               "max-w-full w-full": type === "container" || type === "2Col",
               "h-fit": type === "container",
@@ -377,7 +397,10 @@ const Container = ({ element }: Props) => {
                 >
                   {(provided) => (
                     <div
-                      className={`${childElement.styles.width ? `w-${childElement.styles.width}` : childElement.type === "container" ? "w-full" : 'w-fit'}`}
+                      className={`
+                        ${childElement.styles.width ? `w-${childElement.styles.width}` : childElement.type === "container" ? "w-full" : 'w-fit'}
+                        ${childElement.styles.height ? `h-${childElement.styles.height}` : childElement.type === "container" ? "h-full" : 'h-fit'}                        
+                        `}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
